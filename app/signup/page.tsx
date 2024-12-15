@@ -36,10 +36,12 @@ const SignUpScreen = () => {
     }
     catch (error) {
   if (axios.isAxiosError(error)) {
+    console.error('Error response:', error.response); // Ajoutez cette ligne pour inspecter la réponse
     toast.error(error.response?.data?.message || "Erreur lors de l'inscription.");
   } else {
     toast.error("Une erreur inconnue s'est produite.");
   }
+}
 }
 
 
