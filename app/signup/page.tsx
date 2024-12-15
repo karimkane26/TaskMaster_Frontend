@@ -12,6 +12,7 @@ const SignUpScreen = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSignUp = async () => {
@@ -23,6 +24,7 @@ const SignUpScreen = () => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const response = await axiosClient.post("users/signup", {
+        name,
         email,
         password,
       });
@@ -30,7 +32,7 @@ const SignUpScreen = () => {
       toast.success("Inscription réussie !");
 
       // Rediriger vers l'écran de connexion
-      router.push("/signin");
+      router.push("/dashboard");
     }
     catch (error) {
   if (axios.isAxiosError(error)) {
@@ -65,7 +67,20 @@ const SignUpScreen = () => {
           </Link>
         </div>
       </div>
-
+    {/* Name Input */}
+      <div className="mt-8">
+        <label htmlFor="name" className="block font-bold text-gray-700">
+          Name
+        </label>
+        <input
+          id="name"
+          type="text"
+          placeholder="John Doe"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full mt-2 p-4 bg-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-900"
+        />
+      </div>
       {/* Email Input */}
       <div className="mt-8">
         <label htmlFor="email" className="block font-bold text-gray-700">
