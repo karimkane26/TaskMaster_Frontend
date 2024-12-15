@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axiosClient from "../utils/axiosClient";
 import { toast } from "sonner";
+import axios from "axios";
 
 const SignUpScreen = () => {
   const router = useRouter();
@@ -30,11 +31,16 @@ const SignUpScreen = () => {
 
       // Rediriger vers l'écran de connexion
       router.push("/signin");
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Erreur lors de l'inscription."
-      );
     }
+    catch (error) {
+  if (axios.isAxiosError(error)) {
+    toast.error(error.response?.data?.message || "Erreur lors de l'inscription.");
+  } else {
+    toast.error("Une erreur inconnue s'est produite.");
+  }
+}
+
+
   };
 
   return (
