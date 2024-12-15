@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // Utiliser la version correcte de useRouter
-import axios from "axios";
+import axiosClient from "../utils/axiosClient";
 import { toast } from "sonner";
 
 const SignInScreen = () => {
@@ -15,7 +15,7 @@ const SignInScreen = () => {
   // Fonction pour gérer la connexion
   const handleSignIn = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/api/v1/users/login", {
+      const response = await axiosClient.post("users/login", {
         email,
         password,
       });

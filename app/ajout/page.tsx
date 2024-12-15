@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axiosClient from '../utils/axiosClient';
+import Link from 'next/link';
 
 const Page = () => {
   const [tasks, setTasks] = useState([]); // Liste des tâches
@@ -94,14 +95,18 @@ const Page = () => {
                   </p>
                 )}
               </div>
-              <div className="flex space-x-2">
-                <button className="px-4 py-2 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600">
-                  Edit
-                </button>
-                <button className="px-4 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600">
-                  Delete
-                </button>
-              </div>
+             <div className="flex space-x-2">
+                    <Link href="suppression">
+                      <button className="px-4 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600">
+                        Delete
+                      </button>
+                    </Link>
+                    <Link href={`/modification/${task.id}`}>
+                      <button className="px-4 py-2 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600">
+                        Edit
+                      </button>
+                    </Link>
+                  </div>
             </li>
           ))}
         </ul>
