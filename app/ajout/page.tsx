@@ -154,7 +154,7 @@ const Page = () => {
     if (!newTask.trim() || !newDescription.trim()) return;
 
     try {
-      const response = await axiosClient.post<Task>('/tasks/addtask', {
+      const response = await axiosClient.post('/tasks/addtask', {
         title: newTask,
         description: newDescription,
       });
