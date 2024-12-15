@@ -15,17 +15,31 @@ const EditTaskPage = () => {
     isCompleted: false,
   });
 
-  useEffect(() => {
-    // Déballer la promesse params.id
-    async function resolveParams() {
-      const resolvedParams = await params;
-      setId(resolvedParams.id);
-    }
+  // useEffect(() => {
 
-    resolveParams();
-  }, [params]);
+  //   // Déballer la promesse params.id
+  //   async function resolveParams() {
+  //     const resolvedParams = await params;
+  //     setId(resolvedParams.id);
+  //   }
+
+  //   resolveParams();
+  // }, [params]);
 
   // Fonction pour récupérer les détails de la tâche
+  useEffect(() => {
+  async function resolveParams() {
+    const resolvedParams = await params;
+    if (typeof resolvedParams.id === "string") {
+      setId(resolvedParams.id);
+    } else {
+      setId(null); // ou une autre logique pour gérer les cas non valides
+    }
+  }
+
+  resolveParams();
+}, [params]);
+
   useEffect(() => {
     const fetchTaskDetails = async () => {
       if (id) {
