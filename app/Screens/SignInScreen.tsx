@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,6 +27,7 @@ const SignInScreen = () => {
       
       // Rediriger vers le tableau de bord
       router.push("/dashboard");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       // Gestion des erreurs
       toast.error("Email ou mot de passe incorrect !");

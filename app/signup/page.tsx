@@ -20,6 +20,7 @@ const SignUpScreen = () => {
     }
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const response = await axiosClient.post("users/signup", {
         email,
         password,
