@@ -61,7 +61,7 @@ const SignUpScreen = () => {
         </div>
         <div className="flex flex-col items-end">
           <p className="text-gray-500">Already have an account?</p>
-          <Link href="/signin" className="text-green-900 font-semibold mt-1">
+          <Link href="/" className="text-green-900 font-semibold mt-1">
             Sign In
           </Link>
         </div>
