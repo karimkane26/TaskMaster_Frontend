@@ -29,7 +29,7 @@ const SignUpScreen = () => {
         email,
         password,
       });
-
+      
       toast.success("Inscription réussie !");
       // Rediriger vers l'écran de connexion
       router.push("/dashboard");
