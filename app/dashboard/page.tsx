@@ -159,10 +159,12 @@
 //   );
 // }
 
-'use client'; // Activer les hooks côté client
+'use client';
 import axiosClient from "../utils/axiosClient";
 import { useState, useEffect } from "react";
 
+type Comment = { user: string; message: string; timestamp: string };
+type History = { action: string; timestamp: string; user: string };
 type Task = {
   id: string;
   title: string;
@@ -172,8 +174,8 @@ type Task = {
   status: "To Do" | "In Progress" | "Done";
   priority: "High" | "Medium" | "Low";
   assignee?: string;
-  comments?: { user: string; message: string; timestamp: string }[];
-  history?: { action: string; timestamp: string; user: string }[];
+  comments?: Comment[];
+  history?: History[];
 };
 
 export default function KanbanBoard() {
@@ -186,7 +188,7 @@ export default function KanbanBoard() {
       const response = await axiosClient.get('/tasks');
       if (Array.isArray(response.data)) {
         setTasks(response.data);
-        setError(null); // Réinitialiser les erreurs
+        setError(null);
       } else {
         throw new Error('Invalid response format');
       }
@@ -212,6 +214,21 @@ export default function KanbanBoard() {
     }
   };
 
+  // Calcul des statistiques par utilisateur
+  const userTaskStats = tasks.reduce((acc, task) => {
+    if (!task.assignee) return acc;
+
+    const total = acc[task.assignee]?.total || 0;
+    const completed = acc[task.assignee]?.completed || 0;
+
+    acc[task.assignee] = {
+      total: total + 1,
+      completed: completed + (task.status === "Done" ? 1 : 0),
+    };
+
+    return acc;
+  }, {} as Record<string, { total: number; completed: number }>);
+
   // Catégoriser les tâches par statut
   const categorizedTasks = {
     "To Do": tasks.filter((task) => task.status === "To Do"),
@@ -224,6 +241,20 @@ export default function KanbanBoard() {
       <h1 className="text-2xl font-bold mb-4">Kanban Board</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
+      {/* Statistiques des utilisateurs */}
+      <div className="bg-white shadow rounded-lg p-4 mb-6">
+        <h2 className="text-xl font-bold mb-4">User Statistics</h2>
+        <ul>
+          {Object.entries(userTaskStats).map(([user, stats]) => (
+            <li key={user} className="mb-2">
+              <strong>{user}</strong>: {stats.completed}/{stats.total} tasks completed (
+              {((stats.completed / stats.total) * 100).toFixed(1)}%)
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Tableau Kanban */}
       <div className="grid grid-cols-3 gap-4">
         {Object.keys(categorizedTasks).map((status) => (
           <div key={status} className="bg-white shadow rounded-lg p-4">
@@ -239,6 +270,36 @@ export default function KanbanBoard() {
                   <p className="text-sm">
                     <strong>Assignee:</strong> {task.assignee || "Unassigned"}
                   </p>
+
+                  {/* Affichage des commentaires */}
+                  {task.comments && (
+                    <div className="mt-2">
+                      <h4 className="text-sm font-bold">Comments:</h4>
+                      <ul className="text-sm text-gray-700">
+                        {task.comments.map((comment, index) => (
+                          <li key={index}>
+                            <strong>{comment.user}:</strong> {comment.message} ({new Date(comment.timestamp).toLocaleString()})
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Affichage de l'historique */}
+                  {task.history && (
+                    <div className="mt-2">
+                      <h4 className="text-sm font-bold">History:</h4>
+                      <ul className="text-sm text-gray-700">
+                        {task.history.map((event, index) => (
+                          <li key={index}>
+                            {event.action} by {event.user} ({new Date(event.timestamp).toLocaleString()})
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Boutons pour changer de statut */}
                   <div className="mt-2 flex space-x-2">
                     {["To Do", "In Progress", "Done"]
                       .filter((s) => s !== task.status)
